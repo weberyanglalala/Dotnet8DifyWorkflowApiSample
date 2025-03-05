@@ -1,3 +1,5 @@
+using Dotnet8DifyWorkflowApiSample.Services.DifyWorkflow;
+
 namespace Dotnet8DifyWorkflowApiSample;
 
 public class Program
@@ -8,6 +10,8 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<DifyCreateProductService>();
 
         var app = builder.Build();
 
