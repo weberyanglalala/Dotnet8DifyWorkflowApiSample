@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Dotnet8DifyWorkflowApiSample.Controllers.Dify.Dtos;
 
-public class CreateWorkflowRequest
+public class CreateProductDetailRequest
 {
     [JsonPropertyName("product_name")]
     [Required]

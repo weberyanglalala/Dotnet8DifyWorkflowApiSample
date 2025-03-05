@@ -31,6 +31,6 @@ public class DifyCreateProductService
             throw new Exception($"Error running workflow: {errorResponse}");
         }
     
-        return await response.Content.ReadFromJsonAsync<DifyWorkflowResponse>();
+        return await response.Content.ReadFromJsonAsync<DifyWorkflowResponse>() ?? throw new Exception("Error reading response");
     }
 }

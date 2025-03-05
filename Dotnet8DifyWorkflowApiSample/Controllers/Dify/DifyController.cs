@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Dotnet8DifyWorkflowApiSample.Common;
 using Dotnet8DifyWorkflowApiSample.Controllers.Dify.Dtos;
 using Dotnet8DifyWorkflowApiSample.Services.DifyWorkflow;
@@ -20,26 +21,28 @@ public class DifyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProductDetail([FromBody] CreateWorkflowRequest request)
+    public async Task<IActionResult> CreateProductDetail([FromBody] CreateProductDetailRequest request)
     {
         var inputs = new Dictionary<string, object>();
         inputs.Add("product_name", request.ProductName);
-        
+
         var runWorkflowRequest = new DifyWorkflowRequest
         {
             Inputs = inputs,
             ResponseMode = "blocking",
             User = _difyUserId
         };
-        
+
         var response = await _difyCreateProductService.CreateProductDetail(runWorkflowRequest);
+        var result = JsonSerializer.Deserialize<CreateProductDetailResponse>(response.Data.Outputs.ToString()) ??
+                     throw new Exception("Error reading response");
         var apiResponse = new ApiResponse
         {
             IsSuccess = true,
             Code = ApiStatusCode.Success,
-            Body = response.Data.Outputs
+            Body = result
         };
-        
+
         return Ok(apiResponse);
     }
 }
