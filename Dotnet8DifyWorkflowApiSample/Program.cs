@@ -1,4 +1,5 @@
 using Dotnet8DifyWorkflowApiSample.Services.DifyWorkflow;
+using Dotnet8DifyWorkflowApiSample.Services.OpenAI;
 
 namespace Dotnet8DifyWorkflowApiSample;
 
@@ -12,6 +13,7 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<DifyCreateProductService>();
+        builder.Services.AddScoped<OpenAIService>();
 
         var app = builder.Build();
 
