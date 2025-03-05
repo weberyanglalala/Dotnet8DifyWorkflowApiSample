@@ -1,5 +1,6 @@
 using Dotnet8DifyWorkflowApiSample.Services.DifyWorkflow;
 using Dotnet8DifyWorkflowApiSample.Services.OpenAI;
+using OpenAI.Chat;
 
 namespace Dotnet8DifyWorkflowApiSample;
 
@@ -8,12 +9,15 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        var configuration = builder.Configuration;
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<DifyCreateProductService>();
         builder.Services.AddScoped<OpenAIService>();
+        builder.Services.AddSingleton<ChatClient>(new ChatClient("gpt-4o-mini", configuration["OPENAI_API_KEY"]));
 
         var app = builder.Build();
 

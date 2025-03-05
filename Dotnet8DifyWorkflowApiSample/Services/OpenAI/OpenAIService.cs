@@ -6,20 +6,16 @@ namespace Dotnet8DifyWorkflowApiSample.Services.OpenAI;
 
 public class OpenAIService
 {
-    private readonly IConfiguration _configuration;
-    private readonly string _apiKey;
+    private readonly ChatClient _client;
 
-    public OpenAIService(IConfiguration configuration)
+    public OpenAIService(ChatClient client)
     {
-        _configuration = configuration;
-        _apiKey = _configuration["OPENAI_API_KEY"];
+        _client = client;
     }
 
 
     public async Task<TravelTicketsResponse> GenerateTravelTickets(string productName)
     {
-        ChatClient client = new("gpt-4o-mini", _apiKey); // or your preferred model
-
         List<ChatMessage> messages =
         [
             new UserChatMessage($"請根據商品名稱 {productName} 生成5個旅遊景點"),
@@ -124,7 +120,7 @@ public class OpenAIService
                 jsonSchemaIsStrict: true)
         };
 
-        ChatCompletion completion = await client.CompleteChatAsync(messages, options);
+        ChatCompletion completion = await _client.CompleteChatAsync(messages, options);
 
         string jsonString = completion.Content[0].Text;
 
