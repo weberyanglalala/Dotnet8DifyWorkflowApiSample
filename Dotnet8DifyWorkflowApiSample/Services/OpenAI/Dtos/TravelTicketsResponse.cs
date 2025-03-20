@@ -23,7 +23,7 @@ public class TravelTicketType
     public string Description { get; set; }
 
     [JsonPropertyName("reservation_date")]
-    public string? ReservationDate { get; set; }
+    public string ReservationDate { get; set; }
 
     [JsonPropertyName("ticket_type")]
     public string TicketType { get; set; }

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Dotnet8DifyWorkflowApiSample.Common;
 using Dotnet8DifyWorkflowApiSample.Services.OpenAI.Dtos;
 using OpenAI.Chat;
 
@@ -13,8 +14,7 @@ public class OpenAIService
         _client = client;
     }
 
-
-    public async Task<TravelTicketsResponse> GenerateTravelTickets(string productName)
+    public async Task<Result<TravelTicketsResponse>> GenerateTravelTickets(string productName)
     {
         List<ChatMessage> messages =
         [
@@ -124,6 +124,24 @@ public class OpenAIService
 
         string jsonString = completion.Content[0].Text;
 
-        return JsonSerializer.Deserialize<TravelTicketsResponse>(jsonString) ?? throw new InvalidOperationException();
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            return Result<TravelTicketsResponse>.Failure("Empty content received from AI");
+        }
+        
+        try
+        {
+            var travelTicketsResponse = JsonSerializer.Deserialize<TravelTicketsResponse>(jsonString);
+            if (travelTicketsResponse == null)
+            {
+                return Result<TravelTicketsResponse>.Failure("Deserialization resulted in null");
+            }
+
+            return Result<TravelTicketsResponse>.Success(travelTicketsResponse);
+        }
+        catch (JsonException ex)
+        {
+            return Result<TravelTicketsResponse>.Failure($"Deserialization failed: {ex.Message}");
+        }
     }
 }

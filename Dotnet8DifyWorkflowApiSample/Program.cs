@@ -1,3 +1,4 @@
+using Dotnet8DifyWorkflowApiSample.Middlewares;
 using Dotnet8DifyWorkflowApiSample.Services.DifyWorkflow;
 using Dotnet8DifyWorkflowApiSample.Services.OpenAI;
 using OpenAI.Chat;
@@ -30,12 +31,10 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseMiddleware<ResultErrorHandlingMiddleware>();
         app.UseStaticFiles();
-
         app.UseRouting();
-
         app.UseAuthorization();
-
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

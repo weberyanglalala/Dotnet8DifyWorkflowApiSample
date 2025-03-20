@@ -7,27 +7,32 @@ namespace Dotnet8DifyWorkflowApiSample.Controllers.OpenAI;
 
 [Route("api/[controller]/[action]")]
 [ApiController]
-public class OpenAIController : ControllerBase
+public class OpenAiController : ControllerBase
 {
-    private readonly OpenAIService _openAIService;
+    private readonly OpenAIService _openAiService;
 
-    public OpenAIController(OpenAIService openAiService)
+    public OpenAiController(OpenAIService openAiService)
     {
-        _openAIService = openAiService;
+        _openAiService = openAiService;
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateProductDetail([FromBody] CreateProductDetailRequest request)
     {
-        var response = await _openAIService.GenerateTravelTickets(request.ProductName);
+        var result = await _openAiService.GenerateTravelTickets(request.ProductName);
 
-        var apiResponse = new ApiResponse
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        var response = new ApiResponse
         {
             IsSuccess = true,
             Code = ApiStatusCode.Success,
-            Body = response
+            Body = result.Value.Tickets
         };
 
-        return Ok(apiResponse);
+        return Ok(response);
     }
 }
